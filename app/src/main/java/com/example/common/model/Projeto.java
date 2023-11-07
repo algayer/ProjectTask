@@ -14,12 +14,14 @@ public class Projeto implements Serializable {
     private Date DataEntrega;
     private Date DataInicial;
     private int ID_Equipe;
+    private String nomeEquipe;
+    private boolean Estado;
 
     public Projeto() {
         // Construtor vazio é necessário para serialização
     }
 
-    public Projeto(int ID_Projeto, int ID_Pessoa, String Nome, String Descricao, Date DataEntrega, Date DataInicial, int ID_Equipe) {
+    public Projeto(int ID_Projeto, int ID_Pessoa, String Nome, String Descricao, Date DataEntrega, Date DataInicial, int ID_Equipe, boolean Estado) {
         this.ID_Projeto = ID_Projeto;
         this.ID_Pessoa = ID_Pessoa;
         this.Nome = Nome;
@@ -27,6 +29,20 @@ public class Projeto implements Serializable {
         this.DataEntrega = DataEntrega;
         this.DataInicial = DataInicial;
         this.ID_Equipe = ID_Equipe;
+        this.Estado = Estado;
+    }
+
+    public Projeto(String Nome, String Descricao, Date DataEntrega, Date DataInicial, int ID_Equipe, boolean Estado) {
+        this.Nome = Nome;
+        this.Descricao = Descricao;
+        this.DataEntrega = DataEntrega;
+        this.DataInicial = DataInicial;
+        this.ID_Equipe = ID_Equipe;
+        this.Estado = Estado;
+    }
+
+    public Projeto(int ID_Projeto) {
+        this.ID_Projeto = ID_Projeto;
     }
 
     // Getters e Setters
@@ -86,6 +102,22 @@ public class Projeto implements Serializable {
         this.ID_Equipe = ID_Equipe;
     }
 
+    public String getNomeEquipe() {
+        return nomeEquipe;
+    }
+
+    public void setNomeEquipe(String nomeEquipe) {
+        this.nomeEquipe = nomeEquipe;
+    }
+
+    public boolean getEstado() {
+        return Estado;
+    }
+
+    public void setEstado(boolean Estado) {
+        this.Estado = Estado;
+    }
+
     @Override
     public String toString() {
         return "Projeto{" +
@@ -95,6 +127,17 @@ public class Projeto implements Serializable {
                 ", DataEntrega=" + DataEntrega +
                 ", DataInicial=" + DataInicial +
                 ", ID_Equipe=" + ID_Equipe +
+                ", Estado =" + Estado +
                 '}';
+    }
+
+    public String getEstadoLiteral() {
+        String retorno;
+        if (Estado == true) {
+            retorno = "Completo";
+        } else {
+            retorno = "Em andamento";
+        }
+        return retorno;
     }
 }

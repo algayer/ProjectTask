@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,18 +16,72 @@ import com.example.common.model.Projeto;
 import com.example.project_task.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder> {
 
+    // Interface de callback do ItemClicker
+    public interface OnItemClickListener {
+        void onItemClick(Projeto projeto);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     private List<Projeto> projetoList;
+    private List<Projeto> projetoListFull; // Lista completa para referência do searchBox
     private LayoutInflater inflater;
+    private OnItemClickListener listener;
 
     public ProjectAdapter(Context context, List<Projeto> projetoList) {
         this.inflater = LayoutInflater.from(context);
         this.projetoList = projetoList;
+        this.projetoListFull = new ArrayList<>(projetoList); // Cria uma cópia da lista
     }
+
+    // construtor para passar o listener
+    public ProjectAdapter(Context context, List<Projeto> projetoList, OnItemClickListener listener) {
+        this.inflater = LayoutInflater.from(context);
+        this.projetoList = projetoList;
+        this.listener = listener;
+    }
+
+    public Filter getFilter() {
+        return projectFilter;
+    }
+
+    private Filter projectFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Projeto> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(projetoListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Projeto item : projetoListFull) {
+                    if (item.getNome().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            projetoList.clear();
+            projetoList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     @NonNull
     @Override
@@ -38,11 +94,23 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     public void onBindViewHolder(@NonNull ProjectViewHolder holder, int position) {
         Projeto currentProject = projetoList.get(position);
         holder.projectName.setText(currentProject.getNome());
-        holder.tvProjectLeaderName.setText(currentProject.getDescricao()); // Adapte conforme necessário, coloquei descrição como nome do líder
+        holder.tvProjectLeaderName.setText(currentProject.getDescricao());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Use getAdapterPosition() em vez de usar a variável position
+                int currentPosition = holder.getAdapterPosition();
+                if (listener != null && currentPosition != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(projetoList.get(currentPosition));
+                }
+            }
+        });
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         holder.projectDate.setText(sdf.format(currentProject.getDataEntrega()));
     }
+
 
     @Override
     public int getItemCount() {
@@ -63,7 +131,11 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     }
 
     public void setProjects(List<Projeto> projetoList) {
-        this.projetoList = projetoList;
+        this.projetoList.clear();
+        this.projetoList.addAll(projetoList);
+        this.projetoListFull.clear(); // Adiciona esta linha
+        this.projetoListFull.addAll(projetoList); // Adiciona esta linha
         notifyDataSetChanged();
     }
+
 }

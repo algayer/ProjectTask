@@ -25,11 +25,29 @@ public class Pessoa implements Serializable {
         this.Tipo = Tipo;
     }
 
+    public Pessoa(String cpf, String Usuario, String Email, String Senha) {
+        this.cpf = cpf;
+        this.Usuario = Usuario;
+        this.Email = Email;
+        this.Senha = Senha;
+    }
+
+    public Pessoa(int ID_Pessoa, String cpf, String email) {
+        this.ID_Pessoa = ID_Pessoa;
+        this.cpf = cpf;
+        this.Email = email;
+    }
+
     // construtor que aceita apenas usuário e senha
     public Pessoa(String Usuario, String Senha) {
         this.Usuario = Usuario;
         this.Senha = Senha;
     }
+
+    public Pessoa(int ID_Pessoa) {
+        this.ID_Pessoa = ID_Pessoa;
+    }
+
 
     // Getters e Setters
     public int getID_Pessoa() {
@@ -89,6 +107,18 @@ public class Pessoa implements Serializable {
                 ", Email='" + Email + '\'' +
                 ", Senha='" + Senha + '\'' +
                 '}';
+    }
+
+    public String getFormatarCPF() {
+        String retorno;
+        String cpfFormatado= String.format("%s.%s.%s-%s",
+                cpf.substring(0, 3),
+                cpf.substring(3, 6),
+                cpf.substring(6, 9),
+                cpf.substring(9)
+        );
+        retorno = cpfFormatado;
+        return retorno;
     }
 
 }

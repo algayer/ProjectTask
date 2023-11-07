@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".view.ProjectDetailFragment">
+
+    <LinearLayout
+        android:id="@+id/LayoutNome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome do Projeto"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LayoutDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:id="@+id/tvDescProjectDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descrição"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LayoutDataInicial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/calendario_icon"/>
+
+        <LinearLayout
+            android:id="@+id/LayoutTextosDataInicial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="3dp"
+            android:layout_marginStart="10dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data inicial"
+                android:textSize="16sp"
+                android:textStyle="italic"/>
+
+            <TextView
+                android:id="@+id/tvDataInicial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="07/11/2023"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LayoutDataFinal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/calendario_icon"/>
+
+        <LinearLayout
+            android:id="@+id/LayoutTextosDataFinal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="3dp"
+            android:layout_marginStart="10dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data final"
+                android:textSize="16sp"
+                android:textStyle="italic"/>
+
+            <TextView
+                android:id="@+id/tvDataFinal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="31/12/2023"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LayoutMembros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/membros_icon"/>
+
+        <LinearLayout
+            android:id="@+id/LayoutTextosMembros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="3dp"
+            android:layout_marginStart="10dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Membros da Equipe"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvQuantMembros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 membros"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LayoutTarefas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Tarefas"
+            android:textSize="20dp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="40dp"
+            android:layout_height="3dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_corners">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LayoutTarefasPendentes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_corners_tasks"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTarefasPendentes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="➡Tarefas Pendentes:"
+                android:textSize="16sp"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LayoutTarefasConcluidas"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_corners_tasks">
+
+            <TextView
+                android:id="@+id/tvTarefasStandBy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="➡Tarefas Concluídas:"
+                android:textStyle="italic"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

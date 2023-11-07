@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
+    android:label="Login"
     app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.project_task.view.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_projectListFragment"
             app:destination="@id/projectListFragment"
@@ -21,6 +22,11 @@
     <fragment
         android:id="@+id/projectListFragment"
         android:name="com.example.project_task.view.ProjectListFragment"
-        android:label="fragment_project_list"
+        android:label="Meus Projetos"
         tools:layout="@layout/fragment_project_list" />
+    <fragment
+        android:id="@+id/projectDetailFragment"
+        android:name="com.example.project_task.view.ProjectDetailFragment"
+        android:label="fragment_project_detail"
+        tools:layout="@layout/fragment_project_detail" />
 </navigation>

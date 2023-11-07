@@ -84,12 +84,16 @@ public class LoginFragment extends Fragment {
     private void handleServerResponse(ResponseObject responseObject) {
         if(responseObject.isSuccess()) {
             Log.d(TAG, "Login bem-sucedido");
-            Pessoa user = (Pessoa) responseObject.getData();
-            viewModel.setLoggedUser(user);
-            Log.d(TAG, "User logado: " + user);
-            Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_projectListFragment);
-            viewModel.resetResponseObjectLiveData();
-            limpaCampos();
+            Object data = responseObject.getData();
+            if (data instanceof Pessoa) {
+                Pessoa user = (Pessoa) data;
+                viewModel.setLoggedUser(user);
+                Log.d(TAG, "User logado: " + user);
+                Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_projectListFragment);
+                viewModel.resetResponseObjectLiveData();
+                limpaCampos();
+            }
+
         } else {
             Log.e(TAG, "Erro no login: " + responseObject.getMessage());
             binding.inputUser.setError(responseObject.getMessage());

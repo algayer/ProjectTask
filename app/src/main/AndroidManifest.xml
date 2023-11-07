@@ -16,7 +16,9 @@
         android:theme="@style/Theme.ProjectTask"
         tools:targetApi="31" >
 
-        <activity android:name=".view.MainActivity"
+        <activity
+            android:name=".view.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true"> <!-- Adicione esta linha -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

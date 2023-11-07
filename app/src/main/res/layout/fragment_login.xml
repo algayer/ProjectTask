@@ -41,6 +41,7 @@
             android:layout_marginBottom="10dp"
             android:background="@android:drawable/editbox_background"
             android:hint="@string/write_your_user"
+            android:imeOptions="actionNext"
             android:padding="10dp" />
     </LinearLayout>
 
@@ -69,6 +70,7 @@
             android:background="@android:drawable/editbox_background"
             android:hint="@string/write_your_password"
             android:inputType="textPassword"
+            android:imeOptions="actionDone"
             android:padding="10dp" />
     </LinearLayout>
 

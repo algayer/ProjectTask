@@ -1,6 +1,8 @@
 package com.example.project_task.view;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +35,7 @@ public class ProjectListFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(requireActivity()).get(ServerViewModel.class);
@@ -60,17 +62,47 @@ public class ProjectListFragment extends Fragment {
         // Inicializa o RecyclerView
         RecyclerView recyclerView = binding.rvProjects;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        projectListAdapter = new ProjectAdapter(requireContext(), new ArrayList<>()); // Certifique-se de passar a lista correta aqui
+        projectListAdapter = new ProjectAdapter(requireContext(), new ArrayList<>()); // lista correta aqui
         recyclerView.setAdapter(projectListAdapter);
 
-        viewModel.getProjectsListLiveData().observe(getViewLifecycleOwner(), this::updateProjectList);
+        projectListAdapter.setOnItemClickListener(new ProjectAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Projeto projeto) {
+                // Use o Navigation Component para navegar
+
+            }
+        });
+
+        // Configura a caixa de pesquisa
+        setupSearchBox();
+
+        viewModel.getProjectsListLiveData().observe(getViewLifecycleOwner(),
+                this::updateProjectList);
 
         // Outros eventos ou lógica específica podem ser tratados aqui
+    }
+
+    private void setupSearchBox() {
+        binding.searchBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                projectListAdapter.getFilter().filter(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
     }
 
     private void updateProjectList(List<Projeto> projects) {
         Log.d(TAG, "Lista de projetos atualizada: " + projects.size() + " projetos");
         projectListAdapter.setProjects(projects);
+        projectListAdapter.notifyDataSetChanged(); // Notifica o adaptador sobre a mudança de dados
     }
 
     @Override
