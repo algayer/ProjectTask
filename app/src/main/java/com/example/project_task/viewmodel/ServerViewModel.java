@@ -10,16 +10,19 @@ import com.example.common.utils.RequestObject;
 import com.example.common.utils.ResponseObject;
 import com.example.project_task.network.SocketClient;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServerViewModel extends ViewModel {
 
     private final SocketClient socketClient;
-    private final MutableLiveData<ResponseObject> responseObjectLiveData = new MutableLiveData<>();
+    private final MutableLiveData<ResponseObject> responseObjectLiveData;
     private final MutableLiveData<Pessoa> loggedUserLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<Projeto>> projectsListLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Map<Integer, List<Projeto>>> projectsByTeamLiveData = new MutableLiveData<>();
 
     public ServerViewModel() {
+        responseObjectLiveData = new MutableLiveData<>();
         socketClient = SocketClient.getInstance(responseObjectLiveData);
     }
 
@@ -27,46 +30,57 @@ public class ServerViewModel extends ViewModel {
         return responseObjectLiveData;
     }
 
-    public void sendRequest(RequestObject request) {
-        socketClient.sendRequest(request);
-    }
-
-    public void resetResponseObjectLiveData() {
-        responseObjectLiveData.setValue(null);
-    }
-
     public MutableLiveData<Pessoa> getLoggedUserLiveData() {
         return loggedUserLiveData;
+    }
+
+    public void sendRequest(RequestObject request) {
+        socketClient.sendRequest(request);
     }
 
     public void setLoggedUser(Pessoa user) {
         loggedUserLiveData.setValue(user);
     }
 
-    public MutableLiveData<List<Projeto>> getProjectsListLiveData() {
-        return projectsListLiveData;
+    public void resetResponseObjectLiveData() {
+        responseObjectLiveData.setValue(null);
     }
 
-    public void fetchProjectsForUser(int idPessoa) {
-        // Crie a solicitação para buscar projetos para o usuário
-        RequestObject request = new RequestObject("listarProjetosPorUsuario", idPessoa);
-        // Envie a solicitação usando socketClient
+    public LiveData<Map<Integer, List<Projeto>>> getProjectsByTeamLiveData() {
+        return projectsByTeamLiveData;
+    }
+
+    public void fetchProjectsForTeam(int idEquipe) {
+        RequestObject request = new RequestObject("listarProjetosPorEquipe", idEquipe);
         socketClient.sendRequest(request);
     }
 
-
-
-    // Método para lidar com a resposta de buscar projetos para um usuário
-    public void handleFetchProjectsResponse(ResponseObject response) {
-        if (response != null && "listarProjetosPorUsuario".equals(response.getMessage())) {
-            if (response.isSuccess()) {
-                List<Projeto> projects = (List<Projeto>) response.getData();
-                projectsListLiveData.postValue(projects);
-            } else {
-                // Trate a falha na resposta, se necessário
-                // Por exemplo, exiba uma mensagem de erro ao usuário
+    public void handleServerResponse() {
+        responseObjectLiveData.observeForever(responseObject -> {
+            if (responseObject != null) {
+                switch (responseObject.getMessage()) {
+                    case "login":
+                        if (responseObject.isSuccess()) {
+                            Pessoa user = (Pessoa) responseObject.getData();
+                            loggedUserLiveData.setValue(user);
+                        }
+                        break;
+                    case "listarProjetosPorEquipe":
+                        if (responseObject.isSuccess()) {
+                            int idEquipe = (int) responseObject.getData();
+                            List<Projeto> projects = (List<Projeto>) responseObject.getData();
+                            Map<Integer, List<Projeto>> currentProjects = projectsByTeamLiveData.getValue();
+                            if (currentProjects == null) {
+                                currentProjects = new HashMap<>();
+                            }
+                            currentProjects.put(idEquipe, projects);
+                            projectsByTeamLiveData.postValue(currentProjects);
+                        }
+                        break;
+                    // Add other cases as needed
+                }
             }
-        }
+        });
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.common.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Pessoa implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -11,9 +12,20 @@ public class Pessoa implements Serializable {
     private String Email;
     private String Senha;
     private int Tipo; // 0 para gerente, 1 para funcionário
+    private List<Equipe> listEquipe;
 
     public Pessoa() {
         // Construtor vazio é necessário para serialização
+    }
+
+    public Pessoa(int ID_Pessoa, String cpf, String usuario, String email, String senha, int tipo, List<Equipe> listEquipe) {
+        this.ID_Pessoa = ID_Pessoa;
+        this.cpf = cpf;
+        Usuario = usuario;
+        Email = email;
+        Senha = senha;
+        Tipo = tipo;
+        this.listEquipe = listEquipe;
     }
 
     public Pessoa(int ID_Pessoa, String cpf, String Usuario, String Email, String Senha, int Tipo) {
@@ -96,6 +108,14 @@ public class Pessoa implements Serializable {
 
     public void setTipo(int tipo) {
         Tipo = tipo;
+    }
+
+    public List<Equipe> getListEquipe() {
+        return listEquipe;
+    }
+
+    public void setListEquipe(List<Equipe> listEquipe) {
+        this.listEquipe = listEquipe;
     }
 
     @Override

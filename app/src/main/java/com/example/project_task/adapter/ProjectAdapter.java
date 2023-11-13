@@ -138,4 +138,8 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         notifyDataSetChanged();
     }
 
+    public List<Projeto> getProjects() {
+        return projetoList;
+    }
+
 }

@@ -82,24 +82,31 @@ public class LoginFragment extends Fragment {
     }
 
     private void handleServerResponse(ResponseObject responseObject) {
-        if(responseObject.isSuccess()) {
+        if (responseObject.isSuccess()) {
             Log.d(TAG, "Login bem-sucedido");
             Object data = responseObject.getData();
             if (data instanceof Pessoa) {
                 Pessoa user = (Pessoa) data;
-                viewModel.setLoggedUser(user);
-                Log.d(TAG, "User logado: " + user);
-                Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_projectListFragment);
-                viewModel.resetResponseObjectLiveData();
+                if (user.getListEquipe() != null && !user.getListEquipe().isEmpty()) {
+                    // Usuário possui equipes, pode proceder
+                    viewModel.setLoggedUser(user);
+                    Log.d(TAG, "Usuário logado: " + user);
+                    Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_projectListFragment);
+                    viewModel.resetResponseObjectLiveData();
+                } else {
+                    // Usuário não possui equipes, mostre uma mensagem ou trate o caso
+                    Log.e(TAG, "O usuário não pertence a nenhuma equipe.");
+                    // Mostre alguma mensagem de erro ou instrução ao usuário
+                }
                 limpaCampos();
             }
-
         } else {
             Log.e(TAG, "Erro no login: " + responseObject.getMessage());
             binding.inputUser.setError(responseObject.getMessage());
             binding.inputPassword.setError(responseObject.getMessage());
         }
     }
+
 
     private boolean validateFields() {
         if (binding.inputUser.getText().toString().isEmpty()) {

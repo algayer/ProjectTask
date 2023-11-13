@@ -190,6 +190,18 @@
                 android:textSize="16sp"
                 android:textStyle="italic" />
 
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewTarefasPendentes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="true" />
+            </androidx.core.widget.NestedScrollView>
+
         </LinearLayout>
 
         <LinearLayout
@@ -201,14 +213,26 @@
             android:background="@drawable/rounded_corners_tasks">
 
             <TextView
-                android:id="@+id/tvTarefasStandBy"
+                android:id="@+id/tvTarefasConcluidas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="➡Tarefas Concluídas:"
                 android:textStyle="italic"
                 android:textSize="16sp"/>
 
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewTarefasConcluidas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="true" />
+            </androidx.core.widget.NestedScrollView>
+
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>

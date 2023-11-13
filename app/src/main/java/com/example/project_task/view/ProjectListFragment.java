@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.common.model.Equipe;
 import com.example.common.model.Projeto;
 import com.example.project_task.adapter.ProjectAdapter;
 import com.example.project_task.databinding.FragmentProjectListBinding;
@@ -35,51 +36,46 @@ public class ProjectListFragment extends Fragment {
     }
 
     @Override
-        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(requireActivity()).get(ServerViewModel.class);
 
-        // Observe o loggedUserLiveData do ServerViewModel
-        viewModel.getLoggedUserLiveData().observe(getViewLifecycleOwner(), user -> {
-            if (user != null) {
-                int idPessoa = user.getID_Pessoa(); // Obtenha o ID da pessoa a partir do objeto Pessoa
-                // Assim que o ID do usuário estiver disponível, você pode fazer a request
-                viewModel.fetchProjectsForUser(idPessoa);
-            }
-        });
-
-        // Observando resposta do servidor
-        viewModel.getResponseObjectLiveData().observe(getViewLifecycleOwner(), responseObject -> {
-            if (responseObject != null) {
-                Log.d(TAG, "Resposta recebida: " + responseObject);
-                viewModel.handleFetchProjectsResponse(responseObject);
-            } else {
-                Log.e(TAG, "Resposta recebida é nula");
-            }
-        });
-
         // Inicializa o RecyclerView
         RecyclerView recyclerView = binding.rvProjects;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        projectListAdapter = new ProjectAdapter(requireContext(), new ArrayList<>()); // lista correta aqui
+        projectListAdapter = new ProjectAdapter(requireContext(), new ArrayList<>());
         recyclerView.setAdapter(projectListAdapter);
+
+        // Observa o usuário logado para obter a lista de equipes do usuário
+        viewModel.getLoggedUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            if (user != null && user.getListEquipe() != null && !user.getListEquipe().isEmpty()) {
+                // Limpa a lista de projetos existente
+                projectListAdapter.setProjects(new ArrayList<>());
+                // Atualiza a UI para cada mudança na lista de projetos por equipe
+                viewModel.getProjectsByTeamLiveData().observe(getViewLifecycleOwner(), projectsByTeam -> {
+                    List<Projeto> allProjects = new ArrayList<>();
+                    for (List<Projeto> teamProjects : projectsByTeam.values()) {
+                        allProjects.addAll(teamProjects);
+                    }
+                    updateProjectList(allProjects);
+                });
+                // Busca os projetos para cada equipe do usuário
+                for (Equipe equipe : user.getListEquipe()) {
+                    viewModel.fetchProjectsForTeam(equipe.getID_Equipe());
+                }
+            }
+        });
 
         projectListAdapter.setOnItemClickListener(new ProjectAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Projeto projeto) {
-                // Use o Navigation Component para navegar
-
+                // Implemente a lógica de clique aqui, como navegação
             }
         });
 
         // Configura a caixa de pesquisa
         setupSearchBox();
-
-        viewModel.getProjectsListLiveData().observe(getViewLifecycleOwner(),
-                this::updateProjectList);
-
-        // Outros eventos ou lógica específica podem ser tratados aqui
     }
 
     private void setupSearchBox() {
@@ -100,9 +96,9 @@ public class ProjectListFragment extends Fragment {
     }
 
     private void updateProjectList(List<Projeto> projects) {
-        Log.d(TAG, "Lista de projetos atualizada: " + projects.size() + " projetos");
+        Log.d(TAG, "Atualizando lista de projetos com " + projects.size() + " projetos.");
         projectListAdapter.setProjects(projects);
-        projectListAdapter.notifyDataSetChanged(); // Notifica o adaptador sobre a mudança de dados
+        projectListAdapter.notifyDataSetChanged();
     }
 
     @Override
