@@ -31,7 +31,6 @@ public class ProjectDetailFragment extends Fragment implements TarefaAdapter.OnT
     private FragmentProjectDetailBinding binding;
     private ServerViewModel viewModel;
 
-
     private Projeto projeto;
 
     @Override

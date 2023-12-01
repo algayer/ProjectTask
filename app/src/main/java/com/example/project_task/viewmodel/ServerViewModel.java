@@ -170,6 +170,16 @@ public class ServerViewModel extends ViewModel {
         socketClient.sendRequest(request);
     }
 
+    public void changeUserPassword(String email, String oldPasswordHash, String newPasswordHash) {
+        lastRequestOperation = "trocarSenha";
+        HashMap<String, String> data = new HashMap<>();
+        data.put("email", email);
+        data.put("senhaAntiga", oldPasswordHash);
+        data.put("novaSenha", newPasswordHash);
+        RequestObject request = new RequestObject("trocarSenha", data);
+        socketClient.sendRequest(request);
+    }
+
     @Override
     protected void onCleared() {
         socketClient.closeConnection();

@@ -105,9 +105,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_esqueceu_password"
+            android:text="Trocar senha?"
             android:textSize="16dp"
-            android:textColor="#000000" /> <!-- Ajuste a cor conforme necessário -->
+            android:textColor="#000000" />
 
         <TextView
             android:id="@+id/clickHereText"
