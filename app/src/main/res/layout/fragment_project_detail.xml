@@ -13,6 +13,7 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/tvNomeProjeto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nome do Projeto"
@@ -113,43 +114,43 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/LayoutMembros"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/LayoutMembros"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal">-->
 
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/membros_icon"/>
+<!--        <ImageView-->
+<!--            android:layout_width="48dp"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:src="@drawable/membros_icon"/>-->
 
-        <LinearLayout
-            android:id="@+id/LayoutTextosMembros"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="3dp"
-            android:layout_marginStart="10dp">
+<!--        <LinearLayout-->
+<!--            android:id="@+id/LayoutTextosMembros"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_marginTop="3dp"-->
+<!--            android:layout_marginStart="10dp">-->
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Membros da Equipe"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Membros da Equipe"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textStyle="bold"/>-->
 
-            <TextView
-                android:id="@+id/tvQuantMembros"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5 membros"
-                android:textSize="14sp"/>
+<!--            <TextView-->
+<!--                android:id="@+id/tvQuantMembros"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="5 membros"-->
+<!--                android:textSize="14sp"/>-->
 
-        </LinearLayout>
-    </LinearLayout>
+<!--        </LinearLayout>-->
+<!--    </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/LayoutTarefas"
@@ -174,6 +175,7 @@
 
         </LinearLayout>
 
+        <!-- Layout para Tarefas Pendentes -->
         <LinearLayout
             android:id="@+id/LayoutTarefasPendentes"
             android:layout_width="match_parent"
@@ -188,22 +190,17 @@
                 android:layout_height="wrap_content"
                 android:text="➡Tarefas Pendentes:"
                 android:textSize="16sp"
-                android:textStyle="italic" />
+                android:textStyle="bold|italic" />
 
-            <androidx.core.widget.NestedScrollView
+            <!-- Define uma altura fixa para o RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTarefasPendentes"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewTarefasPendentes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="true" />
-            </androidx.core.widget.NestedScrollView>
+                android:layout_height="222dp" />
 
         </LinearLayout>
 
+        <!-- Layout para Tarefas Concluídas -->
         <LinearLayout
             android:id="@+id/LayoutTarefasConcluidas"
             android:layout_marginTop="10dp"
@@ -217,20 +214,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="➡Tarefas Concluídas:"
-                android:textStyle="italic"
+                android:textStyle="bold|italic"
                 android:textSize="16sp"/>
 
-            <androidx.core.widget.NestedScrollView
+            <!-- Define uma altura fixa para o RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTarefasConcluidas"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewTarefasConcluidas"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="true" />
-            </androidx.core.widget.NestedScrollView>
+                android:layout_height="222dp" />
 
         </LinearLayout>
     </LinearLayout>

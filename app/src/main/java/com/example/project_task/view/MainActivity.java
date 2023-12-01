@@ -3,6 +3,7 @@ package com.example.project_task.view;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -13,11 +14,13 @@ import android.view.MenuItem;
 
 import com.example.project_task.R;
 import com.example.project_task.databinding.ActivityMainBinding;
+import com.example.project_task.viewmodel.ServerViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    private ServerViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
+        // Inicializa o ServerViewModel
+        viewModel = new ViewModelProvider(this).get(ServerViewModel.class);
     }
 
     @Override
@@ -59,6 +64,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+
+        if (navController.getCurrentDestination().getId() == R.id.projectListFragment) {
+            // Realiza o logout
+            viewModel.logout();
+
+            // Navega de volta para o LoginFragment
+            navController.navigate(R.id.loginFragment);
+            return true;
+        }
+
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }

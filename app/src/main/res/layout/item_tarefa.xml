@@ -1,62 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
     <LinearLayout
-        android:id="@+id/LayoutTarefaItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <LinearLayout
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="32dp"
-                android:src="@drawable/alfinete_icon" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/LayoutTextosDataFinal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="3dp">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-
+            <!-- Nome da Tarefa -->
             <TextView
                 android:id="@+id/tvNomeTarefa"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Tarefa 1"
-                android:textSize="16sp"
-                android:textStyle="italic"/>
+                android:layout_weight="1"
+                android:text="Nome da Tarefa"
+                android:textStyle="bold"
+                android:textSize="18sp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+            <!-- Data de Entrega -->
             <TextView
-                android:id="@+id/tvDataFinalTarefa"
+                android:id="@+id/tvDataEntrega"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="31/12/2023"
-                android:textSize="14sp"/>
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginStart="5dp"
-                    android:src="@drawable/prazo_icon" />
-            </LinearLayout>
-
+                android:layout_gravity="end"
+                android:text="🗓️01/01/2000" />
         </LinearLayout>
-    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Descrição da Tarefa -->
+        <TextView
+            android:id="@+id/tvDescricaoTarefa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descrição da Tarefa"
+            android:paddingTop="4dp" />
+
+        <!-- Container para Horas Trabalhadas -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Horas Trabalhadas -->
+            <TextView
+                android:id="@+id/tvHorasTrabalhadas"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Horas Trabalhadas: 0h" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

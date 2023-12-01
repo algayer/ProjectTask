@@ -1,9 +1,11 @@
 package com.example.common.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Pessoa implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private int ID_Pessoa;
@@ -12,20 +14,20 @@ public class Pessoa implements Serializable {
     private String Email;
     private String Senha;
     private int Tipo; // 0 para gerente, 1 para funcionário
-    private List<Equipe> listEquipe;
+    private List<Equipe> equipes;
 
     public Pessoa() {
         // Construtor vazio é necessário para serialização
     }
 
-    public Pessoa(int ID_Pessoa, String cpf, String usuario, String email, String senha, int tipo, List<Equipe> listEquipe) {
+    public Pessoa(int ID_Pessoa, String cpf, String Usuario, String Email, String Senha, int Tipo, List<Equipe> equipes) {
         this.ID_Pessoa = ID_Pessoa;
         this.cpf = cpf;
-        Usuario = usuario;
-        Email = email;
-        Senha = senha;
-        Tipo = tipo;
-        this.listEquipe = listEquipe;
+        this.Usuario = Usuario;
+        this.Email = Email;
+        this.Senha = Senha;
+        this.Tipo = Tipo;
+        this.equipes = equipes;
     }
 
     public Pessoa(int ID_Pessoa, String cpf, String Usuario, String Email, String Senha, int Tipo) {
@@ -35,6 +37,7 @@ public class Pessoa implements Serializable {
         this.Email = Email;
         this.Senha = Senha;
         this.Tipo = Tipo;
+        this.equipes = new ArrayList<>();
     }
 
     public Pessoa(String cpf, String Usuario, String Email, String Senha) {
@@ -44,22 +47,20 @@ public class Pessoa implements Serializable {
         this.Senha = Senha;
     }
 
+    public Pessoa(String Usuario, String Senha) {
+        this.Usuario = Usuario;
+        this.Senha = Senha;
+    }
+
     public Pessoa(int ID_Pessoa, String cpf, String email) {
         this.ID_Pessoa = ID_Pessoa;
         this.cpf = cpf;
         this.Email = email;
     }
 
-    // construtor que aceita apenas usuário e senha
-    public Pessoa(String Usuario, String Senha) {
-        this.Usuario = Usuario;
-        this.Senha = Senha;
-    }
-
     public Pessoa(int ID_Pessoa) {
         this.ID_Pessoa = ID_Pessoa;
     }
-
 
     // Getters e Setters
     public int getID_Pessoa() {
@@ -110,12 +111,12 @@ public class Pessoa implements Serializable {
         Tipo = tipo;
     }
 
-    public List<Equipe> getListEquipe() {
-        return listEquipe;
+    public List<Equipe> getEquipes() {
+        return equipes;
     }
 
-    public void setListEquipe(List<Equipe> listEquipe) {
-        this.listEquipe = listEquipe;
+    public void setEquipes(List<Equipe> equipes) {
+        this.equipes = equipes;
     }
 
     @Override
@@ -126,6 +127,7 @@ public class Pessoa implements Serializable {
                 ", Usuario='" + Usuario + '\'' +
                 ", Email='" + Email + '\'' +
                 ", Senha='" + Senha + '\'' +
+                ", equipes=" + equipes +
                 '}';
     }
 
@@ -140,6 +142,4 @@ public class Pessoa implements Serializable {
         retorno = cpfFormatado;
         return retorno;
     }
-
 }
-

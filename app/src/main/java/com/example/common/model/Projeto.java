@@ -4,11 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Projeto implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private int ID_Projeto;
-
-    private int ID_Pessoa;
     private String Nome;
     private String Descricao;
     private Date DataEntrega;
@@ -21,9 +20,8 @@ public class Projeto implements Serializable {
         // Construtor vazio é necessário para serialização
     }
 
-    public Projeto(int ID_Projeto, int ID_Pessoa, String Nome, String Descricao, Date DataEntrega, Date DataInicial, int ID_Equipe, boolean Estado) {
+    public Projeto(int ID_Projeto, String Nome, String Descricao, Date DataEntrega, Date DataInicial, int ID_Equipe, boolean Estado) {
         this.ID_Projeto = ID_Projeto;
-        this.ID_Pessoa = ID_Pessoa;
         this.Nome = Nome;
         this.Descricao = Descricao;
         this.DataEntrega = DataEntrega;
@@ -52,14 +50,6 @@ public class Projeto implements Serializable {
 
     public void setID_Projeto(int ID_Projeto) {
         this.ID_Projeto = ID_Projeto;
-    }
-
-    public int getID_Pessoa() {
-        return ID_Pessoa;
-    }
-
-    public void setID_Pessoa(int ID_Pessoa) {
-        this.ID_Pessoa = ID_Pessoa;
     }
 
     public String getNome() {
@@ -120,15 +110,15 @@ public class Projeto implements Serializable {
 
     @Override
     public String toString() {
-        return "Projeto{" +
-                "ID_Projeto=" + ID_Projeto +
-                ", Nome='" + Nome + '\'' +
-                ", Descricao='" + Descricao + '\'' +
-                ", DataEntrega=" + DataEntrega +
-                ", DataInicial=" + DataInicial +
-                ", ID_Equipe=" + ID_Equipe +
-                ", Estado =" + Estado +
-                '}';
+        return "Projeto{"
+                + "ID_Projeto=" + ID_Projeto
+                + ", Nome='" + Nome + '\''
+                + ", Descricao='" + Descricao + '\''
+                + ", DataEntrega=" + DataEntrega
+                + ", DataInicial=" + DataInicial
+                + ", ID_Equipe=" + ID_Equipe
+                + ", Estado =" + Estado
+                + '}';
     }
 
     public String getEstadoLiteral() {

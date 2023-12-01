@@ -11,23 +11,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.common.model.Equipe;
+import com.example.common.model.Pessoa;
 import com.example.common.model.Projeto;
+import com.example.project_task.R;
 import com.example.project_task.adapter.ProjectAdapter;
 import com.example.project_task.databinding.FragmentProjectListBinding;
 import com.example.project_task.viewmodel.ServerViewModel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ProjectListFragment extends Fragment {
     private static final String TAG = "ProjectListFragment";
     private FragmentProjectListBinding binding;
     private ServerViewModel viewModel;
     private ProjectAdapter projectListAdapter;
+    private Set<Integer> fetchedTeams;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,41 +47,41 @@ public class ProjectListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(requireActivity()).get(ServerViewModel.class);
+        fetchedTeams = new HashSet<>(); // Inicializa o conjunto de IDs de equipe
 
-        // Inicializa o RecyclerView
+        setupRecyclerView();
+
+        // Observa o usuário logado para obter a lista de equipes do usuário
+        viewModel.getLoggedUserLiveData().observe(getViewLifecycleOwner(), this::handleUserTeams);
+
+        projectListAdapter.setOnItemClickListener(projeto -> navigateToProjectDetails(view, projeto));
+    }
+
+    private void setupRecyclerView() {
         RecyclerView recyclerView = binding.rvProjects;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         projectListAdapter = new ProjectAdapter(requireContext(), new ArrayList<>());
         recyclerView.setAdapter(projectListAdapter);
+        Log.d(TAG, "RecyclerView e Adapter inicializados.");
+    }
 
-        // Observa o usuário logado para obter a lista de equipes do usuário
-        viewModel.getLoggedUserLiveData().observe(getViewLifecycleOwner(), user -> {
-            if (user != null && user.getListEquipe() != null && !user.getListEquipe().isEmpty()) {
-                // Limpa a lista de projetos existente
-                projectListAdapter.setProjects(new ArrayList<>());
-                // Atualiza a UI para cada mudança na lista de projetos por equipe
-                viewModel.getProjectsByTeamLiveData().observe(getViewLifecycleOwner(), projectsByTeam -> {
-                    List<Projeto> allProjects = new ArrayList<>();
-                    for (List<Projeto> teamProjects : projectsByTeam.values()) {
-                        allProjects.addAll(teamProjects);
-                    }
-                    updateProjectList(allProjects);
-                });
-                // Busca os projetos para cada equipe do usuário
-                for (Equipe equipe : user.getListEquipe()) {
+    private void handleUserTeams(Pessoa user) {
+        if (user != null && user.getEquipes() != null && !user.getEquipes().isEmpty()) {
+            Log.d(TAG, "Usuário logado com equipes: " + user.getEquipes());
+            for (Equipe equipe : user.getEquipes()) {
+                if (!fetchedTeams.contains(equipe.getID_Equipe())) {
+                    Log.d(TAG, "Buscando projetos para a equipe: " + equipe.getID_Equipe());
                     viewModel.fetchProjectsForTeam(equipe.getID_Equipe());
+                    fetchedTeams.add(equipe.getID_Equipe());
                 }
             }
-        });
+        } else {
+            Log.d(TAG, "Usuário logado não possui equipes ou dados do usuário são nulos.");
+        }
 
-        projectListAdapter.setOnItemClickListener(new ProjectAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Projeto projeto) {
-                // Implemente a lógica de clique aqui, como navegação
-            }
-        });
+        // Observa mudanças na lista de projetos por equipe
+        viewModel.getProjectsByTeamLiveData().observe(getViewLifecycleOwner(), this::updateProjectList);
 
-        // Configura a caixa de pesquisa
         setupSearchBox();
     }
 
@@ -95,15 +102,26 @@ public class ProjectListFragment extends Fragment {
         });
     }
 
-    private void updateProjectList(List<Projeto> projects) {
-        Log.d(TAG, "Atualizando lista de projetos com " + projects.size() + " projetos.");
-        projectListAdapter.setProjects(projects);
+    private void navigateToProjectDetails(View view, Projeto projeto) {
+        Bundle bundle = new Bundle();
+        //bundle.putInt("project_id", projectId);
+        bundle.putSerializable("projeto", projeto);
+        Navigation.findNavController(view).navigate(R.id.action_projectListFragment_to_projectDetailFragment, bundle);
+    }
+
+    private void updateProjectList(Map<Integer, List<Projeto>> projectsByTeam) {
+        List<Projeto> allProjects = new ArrayList<>();
+        for (List<Projeto> teamProjects : projectsByTeam.values()) {
+            allProjects.addAll(teamProjects);
+        }
+        projectListAdapter.setProjects(allProjects);
         projectListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        viewModel.getProjectsByTeamLiveData().removeObservers(getViewLifecycleOwner());
         binding = null;
     }
 }

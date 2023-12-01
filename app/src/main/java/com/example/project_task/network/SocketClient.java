@@ -2,11 +2,12 @@ package com.example.project_task.network;
 
 import android.util.Log;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import androidx.lifecycle.MutableLiveData;
 import com.example.common.utils.RequestObject;
 import com.example.common.utils.ResponseObject;
@@ -19,11 +20,12 @@ public class SocketClient {
     private final MutableLiveData<ResponseObject> responseObjectLiveData;
     private boolean isConnected = false;
     private static final String TAG = "SocketClient";
+    private ExecutorService executorService;
 
-    private final static String TERMINATION_STRING = "TERMINATION_SIGNAL";
     private SocketClient(MutableLiveData<ResponseObject> responseObjectLiveData) {
         this.responseObjectLiveData = responseObjectLiveData;
-        this.isConnected = connect();
+        initializeExecutorService();
+        this.executorService.execute(this::connect);
     }
 
     public static synchronized SocketClient getInstance(MutableLiveData<ResponseObject> responseObjectLiveData) {
@@ -33,72 +35,67 @@ public class SocketClient {
         return instance;
     }
 
-    private boolean connect() {
-        // Cria uma nova thread para a operação de rede
-        new Thread(() -> {
-            try {
-                Log.d(TAG, "Tentando conectar...");
-                socket = new Socket("10.0.2.2", 8080);
-                out = new ObjectOutputStream(socket.getOutputStream());
-                in = new ObjectInputStream(socket.getInputStream());
-                startListener();
-                Log.d(TAG, "Conectado com sucesso.");
-                isConnected = true;
-            } catch (IOException e) {
-                Log.e(TAG, "Erro ao conectar", e);
-                isConnected = false;
-            }
-        }).start();
-
-        return isConnected;
+    private void initializeExecutorService() {
+        if (executorService == null || executorService.isShutdown()) {
+            executorService = Executors.newFixedThreadPool(2);
+        }
     }
 
-    public boolean sendRequest(RequestObject request) {
-        new Thread(() -> {
+    private void connect() {
+        try {
+            Log.d(TAG, "Tentando conectar...");
+            socket = new Socket("10.0.2.2", 8080);
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+            isConnected = true;
+            Log.d(TAG, "Conectado com sucesso.");
+            startListener();
+        } catch (IOException e) {
+            Log.e(TAG, "Erro ao conectar", e);
+            isConnected = false;
+        }
+    }
+
+    public void sendRequest(RequestObject request) {
+        initializeExecutorService();
+        executorService.execute(() -> {
             if (!isConnected) {
                 Log.d(TAG, "Não está conectado. Tentando reconectar...");
-                isConnected = connect();
-                if (!isConnected) {
-                    Log.e(TAG, "Falha ao reconectar.");
-                    return;
+                connect();
+            }
+            if (isConnected) {
+                try {
+                    Log.d(TAG, "Enviando requisição: " + request.toString());
+                    out.writeObject(request);
+                    out.flush();
+                    Log.d(TAG, "Requisição enviada.");
+                } catch (IOException e) {
+                    Log.e(TAG, "Erro ao enviar requisição: " + e.getMessage(), e);
+                    isConnected = false;
                 }
+            } else {
+                Log.e(TAG, "Falha ao reconectar.");
             }
-            try {
-                Log.d(TAG, "Enviando requisição...");
-                out.writeObject(request);
-                out.flush();
-                Log.d(TAG, "Requisição enviada.");
-            } catch (Exception e) {
-                Log.e(TAG, "Erro ao enviar requisição: " + e.getMessage());
-                e.printStackTrace();
-                isConnected = false;
-            }
-        }).start();
-        return true;
+        });
     }
 
     private void startListener() {
-        new Thread(() -> {
+        initializeExecutorService();
+        executorService.execute(() -> {
             try {
                 while (isConnected) {
                     Log.d(TAG, "Aguardando resposta...");
-                    Object obj = in.readObject();
-
-                    ResponseObject response = (ResponseObject) obj;
+                    ResponseObject response = (ResponseObject) in.readObject();
+                    Log.d(TAG, "Resposta recebida: " + response.toString());
                     responseObjectLiveData.postValue(response);
-                    Log.d(TAG, "Resposta recebida.");
+                    Log.d(TAG, "Resposta processada.");
                 }
-            } catch (EOFException e) {
-                Log.e(TAG, "Conexão perdida com o servidor");
-                isConnected = false;
-            } catch (Exception e) {
-                Log.e(TAG, "Erro ao receber resposta: " + e.getMessage());
-                e.printStackTrace();
+            } catch (IOException | ClassNotFoundException e) {
+                Log.e(TAG, "Erro ao receber resposta: " + e.getMessage(), e);
                 isConnected = false;
             }
-        }).start();
+        });
     }
-
 
     public void closeConnection() {
         try {
@@ -107,10 +104,12 @@ public class SocketClient {
             if (out != null) out.close();
             if (socket != null) socket.close();
             isConnected = false;
+            if (!executorService.isShutdown()) {
+                executorService.shutdown();
+            }
             Log.d(TAG, "Conexão fechada.");
         } catch (IOException e) {
-            Log.e(TAG, "Erro ao fechar conexão: " + e.getMessage());
-            e.printStackTrace();
+            Log.e(TAG, "Erro ao fechar conexão: " + e.getMessage(), e);
         }
     }
 }

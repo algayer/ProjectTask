@@ -99,7 +99,6 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Use getAdapterPosition() em vez de usar a variável position
                 int currentPosition = holder.getAdapterPosition();
                 if (listener != null && currentPosition != RecyclerView.NO_POSITION) {
                     listener.onItemClick(projetoList.get(currentPosition));
@@ -124,7 +123,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         ProjectViewHolder(View itemView) {
             super(itemView);
             projectName = itemView.findViewById(R.id.projectName);
-            tvProjectLeaderName = itemView.findViewById(R.id.tvDescProject);
+            tvProjectLeaderName = itemView.findViewById(R.id.tvDescProject); // hehe
             projectDate = itemView.findViewById(R.id.projectDate);
             projectIcon = itemView.findViewById(R.id.projectIcon);
         }
@@ -133,8 +132,8 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     public void setProjects(List<Projeto> projetoList) {
         this.projetoList.clear();
         this.projetoList.addAll(projetoList);
-        this.projetoListFull.clear(); // Adiciona esta linha
-        this.projetoListFull.addAll(projetoList); // Adiciona esta linha
+        this.projetoListFull.clear();
+        this.projetoListFull.addAll(projetoList);
         notifyDataSetChanged();
     }
 

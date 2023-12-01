@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -80,13 +81,17 @@
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/text_button_login" />
+        android:backgroundTint="#3ADD40"
+        android:text="@string/text_button_login"
+        app:cornerRadius="8dp" />
 
     <Button
         android:id="@+id/btnCancelar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/text_button_cancelar" />
+        android:backgroundTint="#E82727"
+        android:text="@string/text_button_cancelar"
+        app:cornerRadius="8dp" />
 
     <!-- Esqueceu sua senha -->
     <LinearLayout
